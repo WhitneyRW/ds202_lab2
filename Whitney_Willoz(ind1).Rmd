@@ -52,11 +52,28 @@ boxplot(choco$Rating ~ CocoaPercentonRating)
 ## Exploration
 
 4.How do different bean origins compare in terms of the flavor of chocolates? Are beans from some places better than the other? Create both numerical and graphical summaries, and explain.
-**
-Answer:
+
+Answer:Brazil has the creamiest chocolate compared to all other countries and the highest overall rating of the chocolate because of it. Blend has an average rating on the higher side because it has sweet and creamy as a flavor characteristic which are positive characteristics of a chocolate.
 
 ```{r}
+library(tidyverse)
+flavor <- table(choco$Characteristics1)
+flavor_filtered <- flavor[flavor > 50]
+choco_filtered <- filter(choco, Characteristics1 %in% names(flavor_filtered))
 
+country_filtered <- table(choco$CountryBeanOrigin) %>% 
+  sort(decreasing = TRUE) %>%
+  head(10) # select the top 10 countries
+
+choco %>% 
+  filter(Characteristics1 %in% names(flavor_filtered)) %>% # filter flavor
+  filter(CountryBeanOrigin %in% names(country_filtered)) %>% # filter country
+  ggplot() +
+  geom_bar(aes(x = CountryBeanOrigin, fill = Characteristics1), position = 'fill') + 
+  coord_flip() 
+
+tapply(choco$Rating, choco$CountryBeanOrigin, summary) %>%
+  head(5)
 
 ```
 
