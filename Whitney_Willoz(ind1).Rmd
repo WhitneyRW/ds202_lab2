@@ -1,0 +1,98 @@
+---
+title: "lab2_Whitney_Willoz"
+author: "Whitney Willoz"
+date: "9/13/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Reading in the data
+```{r}
+library(classdata)
+data(choco)
+str(choco) 
+```
+
+1.How are the cocoa percent distributed? Create both a histogram and a boxplot and describe them. Don’t forget to mention outliers, if there are any.
+
+Answer:Based on the histogram and boxplot of the cocoa percent, I was able to find that it is normally distributed with a couple outliers on the high end of percentage. 
+
+```{r}
+boxplot(choco$CocoaPercent)
+hist(choco$CocoaPercent)
+```
+
+2.How does the number of ratings depend on the country of bean origin? Draw a bar chart of the number of ratings by bean origin. [Hint: If your graph is too dense and the labels are not legible, show fewer bean origins.]
+
+Answer:The number of ratings is higher in Peru and Venezuela so higher producing companies probably have more ratings.
+
+```{r}
+beanOrigins <- table(choco$CountryBeanOrigin)
+beanOrigins1<- sort(beanOrigins, decreasing = TRUE)
+beanOrigins2 <- head(beanOrigins1, 10)
+barplot(beanOrigins2, las = 2, cex.names = 0.6)
+```
+
+3.Do ratings depend on the cacao percentage of a chocolate bar? Create both numerical and graphical summaries, and explain. [Hint: Think about why the scatterplot is not a very good choice for visualization here.]
+
+Answer:The more percent Cocoa was in the chocolate the mean rating for that chocolate went up. There is a positive correlation in the boxplots.
+
+```{r}
+summary(choco$CocoaPercent)
+summary(factor(choco$CocoaPercent))
+summary(factor(choco$Rating))
+CocoaPercentonRating <- reorder(factor(choco$CocoaPercent), choco$Rating, FUN=mean)
+boxplot(choco$Rating ~ CocoaPercentonRating)
+
+```
+
+## Exploration
+
+4.How do different bean origins compare in terms of the flavor of chocolates? Are beans from some places better than the other? Create both numerical and graphical summaries, and explain.
+**
+Answer:
+
+```{r}
+
+
+```
+
+5.brainstorm two analyses you would like to perform. Describe in plain language what comparisons are you making. Create suitable numerical and graphical summaries for your analyses. Describe the results.
+
+Analysis 1:Do chocolates from the US location have a typical lower rating than that of the French?
+
+Answer: On average the French have a higher rating of their chocolate than the US. But only by A very slim bit because there are just more observations of the US that vary.
+
+```{r}
+franceL <- choco[choco$Location == "France",]
+franceM <- mean(franceL$Rating)
+franceM
+boxplot(franceL$Rating, xlab = "France", ylab = "Ratings")
+
+USL <- choco[choco$Location == "U.S.A.",]
+USM <- mean(USL$Rating)
+USM
+boxplot(USL$Rating, xlab = "USA", ylab = "Ratings")
+
+```
+
+Analysis 2:Does Amatller (Simon Coll) have a higher rating than Artisan du Chocolat company?
+
+Answer:Amatller (Simon Coll) has a lower average rating and a smaller spread of ratings meaning they must produce lower quality chocolate than Artisan du Chocolat.
+
+
+```{r}
+AmaC <- choco[choco$Company == "Amatller (Simon Coll)", ]
+AmaM <- mean(AmaC$Rating)
+AmaM
+boxplot(AmaC$Rating, xlab = "Amatller (Simon Coll)", ylab = "Ratings")
+
+ArtC <- choco[choco$Company == "Artisan du Chocolat", ]
+ArtM <- mean(ArtC$Rating)
+ArtM
+boxplot(ArtC$Rating, xlab = "Artisan du Chocolat", ylab = "Ratings")
+
+```
